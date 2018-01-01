@@ -2,6 +2,8 @@
 
 The digital exokernel operating system.
 
+\[!\[Build Status\]\(https://travis-ci.org/friedrich12/DEOS.svg?branch=master\)\]\(https://travis-ci.org/friedrich12/DEOS\)
+
 ![](/assets/import.png)
 
 Graphic overview of an exokernel. Exokernels are much smaller than a normal kernels \(monolithic kernels\). They give more direct access to the hardware, thus removing most abstractions
