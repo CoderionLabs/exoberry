@@ -2,8 +2,6 @@
 
 The digital exokernel operating system.
 
-To learn more about exokernels https://pdos.csail.mit.edu/archive/exo/exo-slides/sld001.htm
-
 ![](/assets/import.png)
 
 Graphic overview of an exokernel. Exokernels are much smaller than a normal kernels \(monolithic kernels\). They give more direct access to the hardware, thus removing most abstractions
@@ -19,6 +17,10 @@ For more see
 [https://en.wikipedia.org/wiki/Exokernel](https://en.wikipedia.org/wiki/Exokernel) [ ](http://wiki.osdev.org/Exokernel)
 
 [http://wiki.osdev.org/Exokernel](http://wiki.osdev.org/Exokernel)
+
+https://pdos.csail.mit.edu/archive/exo/theses/index.html
+
+https://pdos.csail.mit.edu/archive/exo/exo-slides/sld001.htm
 
 **Contributing**
 
