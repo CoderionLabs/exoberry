@@ -18,19 +18,15 @@ For more see
 
 [http://wiki.osdev.org/Exokernel](http://wiki.osdev.org/Exokernel)
 
-https://pdos.csail.mit.edu/archive/exo/theses/index.html
+[https://pdos.csail.mit.edu/archive/exo/theses/index.html](https://pdos.csail.mit.edu/archive/exo/theses/index.html)
 
-https://pdos.csail.mit.edu/archive/exo/exo-slides/sld001.htm
+[https://pdos.csail.mit.edu/archive/exo/exo-slides/sld001.htm](https://pdos.csail.mit.edu/archive/exo/exo-slides/sld001.htm)
 
 **Contributing**
 
-DEOS is a meritocratic open source project with a large variety of tasks. Even if you can't write code, you can still help! DEOS needs designers, (technical) writers, translators, testers... Get involved and help out!
+DEOS is a meritocratic open source project with a large variety of tasks. Even if you can't write code, you can still help! DEOS needs designers, \(technical\) writers, translators, testers... Get involved and help out! [Join the mailling list.](https://docs.google.com/forms/d/e/1FAIpQLSes4ibh1F-PTGdaPns6k446ODwOSNaju3DksLgOB_Zo-IMu_Q/viewform?usp=sf_link)
 
 **Contributing code**
 
 Right now there seems to be nothing to say about the project yet. Right now we need people to build the exokernel if you can submit any code to build the exokernel, please submit a pull request.
-
-
-
-
 
