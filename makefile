@@ -34,7 +34,7 @@ objects = obj/loader.o \
 
 
 run: DEOS.iso
-	qemu-system-x86_64 -cdrom DEOS.iso
+	# qemu-system-x86_64 -cdrom DEOS.iso
 
 obj/%.o: src/%.cpp
 	mkdir -p $(@D)
