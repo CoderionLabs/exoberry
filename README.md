@@ -1,6 +1,7 @@
 # DEOS
 
-The digital exokernel operating system
+The digital exokernel operating system.
+
 To learn more about exokernels https://pdos.csail.mit.edu/archive/exo/exo-slides/sld001.htm
 
 ![](/assets/import.png)
