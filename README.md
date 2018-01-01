@@ -18,5 +18,15 @@ For more see
 
 [http://wiki.osdev.org/Exokernel](http://wiki.osdev.org/Exokernel)
 
+**Contributing**
+
+DEOS is a meritocratic open source project with a large variety of tasks. Even if you can't write code, you can still help! DEOS needs designers, (technical) writers, translators, testers... Get involved and help out!
+
+**Contributing code**
+
+Right now there seems to be nothing to say about the project yet. Right now we need people to build the exokernel if you can submit any code to build the exokernel, please submit a pull request.
+
+
+
 
 
