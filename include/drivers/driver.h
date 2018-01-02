@@ -24,8 +24,9 @@ namespace DEOS
     namespace drivers
     {
 
-        struct Driver
-        {            
+        class Driver
+        {
+        public:            
             virtual void Activate();
             virtual int Reset();
             virtual void Deactivate();

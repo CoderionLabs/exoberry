@@ -40,8 +40,6 @@ void Driver::Deactivate()
 }
 
 
-
-
 DriverManager::DriverManager()
 {
     numDrivers = 0;
