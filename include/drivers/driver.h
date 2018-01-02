@@ -26,7 +26,9 @@ namespace DEOS
 
         class Driver
         {
-        public:            
+        public:
+            Driver();
+            ~Driver();            
             virtual void Activate();
             virtual int Reset();
             virtual void Deactivate();
