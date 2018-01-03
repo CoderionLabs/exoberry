@@ -1,6 +1,6 @@
 # DEOS
 
-The digital exokernel operating system.
+The distributed exokernel operating system.
 
 [![Build Status](https://travis-ci.org/friedrich12/DEOS.svg?branch=master)](https://travis-ci.org/friedrich12/DEOS)
 
