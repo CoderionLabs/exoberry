@@ -1,6 +1,6 @@
 # DEOS
 
-The digital exokernel operating system.
+The distributed exokernel operating system.
 
 [![Build Status](https://travis-ci.org/friedrich12/DEOS.svg?branch=master)](https://travis-ci.org/friedrich12/DEOS)
 
@@ -27,6 +27,8 @@ For more see
 **Contributing**
 
 DEOS is a meritocratic open source project with a large variety of tasks. Even if you can't write code, you can still help! DEOS needs designers, \(technical\) writers, translators, testers... Get involved and help out! [Join the mailling list.](https://docs.google.com/forms/d/e/1FAIpQLSes4ibh1F-PTGdaPns6k446ODwOSNaju3DksLgOB_Zo-IMu_Q/viewform?usp=sf_link)
+
+I recommend to everyone that is going to contribute to read this paper https://www.openu.ac.il/home/wiseman/2os/microkernels/exokernel.pdf
 
 **Contributing code**
 
