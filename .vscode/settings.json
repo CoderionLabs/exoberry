@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "elf.h": "c",
+        "stdarg.h": "c"
+    }
+}

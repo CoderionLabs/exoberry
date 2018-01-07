@@ -15,6 +15,7 @@ static void cons_putc(int c);
 static void
 delay(void)
 {
+	// input to port
 	inb(0x84);
 	inb(0x84);
 	inb(0x84);
@@ -59,6 +60,7 @@ void
 serial_intr(void)
 {
 	if (serial_exists)
+		// Feed input characters into the cirular console input buffer
 		cons_intr(serial_proc_data);
 }
 
@@ -68,6 +70,7 @@ serial_putc(int c)
 	int i;
 
 	for (i = 0;
+		 // Input from port
 	     !(inb(COM1 + COM_LSR) & COM_LSR_TXRDY) && i < 12800;
 	     i++)
 		delay();

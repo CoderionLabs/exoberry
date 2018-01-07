@@ -48,8 +48,8 @@ bootmain(void)
 		goto bad;
 
 	// load each program segment (ignores ph flags)
-	ph = (struct Proghdr *) ((uint8_t *) ELFHDR + ELFHDR->e_phoff);
-	eph = ph + ELFHDR->e_phnum;
+	ph = (struct Proghdr *) ((uint8_t *) ELFHDR + ELFHDR->e_phoff); // Points to the start of the program header table
+	eph = ph + ELFHDR->e_phnum; // Contains the number of entries in the program header table.
 	for (; ph < eph; ph++)
 		// p_pa is the load address of this segment (as well
 		// as the physical address)
