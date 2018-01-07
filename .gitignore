@@ -1,5 +1,5 @@
-/obj
 /assets
+/obj
 /jos.in
 /jos.log
 /jos.out
@@ -12,7 +12,8 @@
 /qemu.out
 /qemu.log
 /gradelib.pyc
-/lab?-handin.tar.gz
+/lab*-handin.tar.gz
 /lab?/
 /sol?/
 /myapi.key
+/.suf
