@@ -1,34 +1,17 @@
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.bin
-*.iso
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+/obj
+/jos.in
+/jos.log
+/jos.out
+/jos.out.*
+/jos.cmd
+/.gdbinit
+/wget.log
+/qemu.pcap
+/qemu.pcap.*
+/qemu.out
+/qemu.log
+/gradelib.pyc
+/lab?-handin.tar.gz
+/lab?/
+/sol?/
+/myapi.key
