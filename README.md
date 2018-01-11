@@ -1,6 +1,6 @@
 # DEOS
 
-The distributed exokernel operating system.
+The distributed exokernel operating system. Most of this is derived from 6.828. I was told by Dawson Engler who was one of the many people that developed the exokernel to start with this. We will later implement ideas from the papers.
 
 [![Build Status](https://travis-ci.org/friedrich12/DEOS.svg?branch=master)](https://travis-ci.org/friedrich12/DEOS)
 
