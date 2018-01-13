@@ -45,7 +45,6 @@ printnum(void (*putch)(int, void*), void *putdat,
 			putch(padc, putdat);
 	}
 	
-	// Error on line 98 caused by something we don't know
 	// then print this (the least significant) digit
 	putch("0123456789abcdef"[num % base], putdat);
 }
