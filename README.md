@@ -1,9 +1,10 @@
 DEOS
 =======================
-**[Mailing Lists](https://docs.google.com/forms/d/e/1FAIpQLSes4ibh1F-PTGdaPns6k446ODwOSNaju3DksLgOB_Zo-IMu_Q/viewform?usp=sf_link)
-|[![Build Status](https://travis-ci.org/friedrich12/DEOS.svg?branch=master)](https://travis-ci.org/friedrich12/DEOS)
+**[Mailing Lists](https://docs.google.com/forms/d/e/1FAIpQLSes4ibh1F-PTGdaPns6k446ODwOSNaju3DksLgOB_ZoIMu_Q/viewform?usp=sf_link)
+| [![Build Status](https://travis-ci.org/friedrich12/DEOS.svg?branch=master)](https://travis-ci.org/friedrich12/DEOS)
 
-[](https://upload.wikimedia.org/wikipedia/commons/f/f2/Exokernel_revised%28english%29.png)
+
+![alt text](https://upload.wikimedia.org/wikipedia/commons/f/f2/Exokernel_revised%28english%29.png)
 
 
 Graphic overview of an exokernel. Exokernels are much smaller than a normal kernels \(monolithic kernels\). They give more direct access to the hardware, thus removing most abstractions
