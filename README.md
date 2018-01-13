@@ -1,7 +1,7 @@
 DEOS
 =======================
 **[Mailing Lists](https://docs.google.com/forms/d/e/1FAIpQLSes4ibh1F-PTGdaPns6k446ODwOSNaju3DksLgOB_ZoIMu_Q/viewform?usp=sf_link)
-| [![Build Status](https://travis-ci.org/friedrich12/DEOS.svg?branch=master)](https://travis-ci.org/friedrich12/DEOS)
+| ![Build Status](https://travis-ci.org/friedrich12/DEOS.svg?branch=master)](https://travis-ci.org/friedrich12/DEOS)
 
 
 ![alt text](https://upload.wikimedia.org/wikipedia/commons/f/f2/Exokernel_revised%28english%29.png)
@@ -62,21 +62,18 @@ Contributing
 -------------------
 DEOS is a meritocratic open source project with a large variety of tasks. Even if you can't write code, you can still help! DEOS needs designers, \(technical\) writers, translators, testers... Get involved and help out!
 
-### Contributing code
+## Contributing code
 If you're submitting a patch, please make sure you're following the
 [patch submitting guidelines](https://github.com/friedrich12/DEOS/PATCHES.md).
 
-### Contributing documentation
+## Contributing documentation
 Write now nothing is really documented. Just find an undocumented class, write
 documentation for it, and [submit a patch](https://github.com/friedrich12/DEOS/PATCHES.md).
 
-### Contributing translations
-See [wiki:i18n](https://dev.haiku-os.org/wiki/i18n).
-
-### Contributing software ports
+## Contributing software ports
 Right now there is not a software porter see issue 8.
 
-### Exokernel?
+## Exokernel?
 
 [https://en.wikipedia.org/wiki/Exokernel](https://en.wikipedia.org/wiki/Exokernel) [ ](http://wiki.osdev.org/Exokernel)
 
