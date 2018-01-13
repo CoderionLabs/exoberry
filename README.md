@@ -1,6 +1,7 @@
 DEOS
 =======================
 **[Mailing Lists](https://docs.google.com/forms/d/e/1FAIpQLSes4ibh1F-PTGdaPns6k446ODwOSNaju3DksLgOB_ZoIMu_Q/viewform?usp=sf_link)
+| [![Build Status](https://travis-ci.org/friedrich12/DEOS.svg?branch=master)](https://travis-ci.org/friedrich12/DEOS)**
 
 
 ![alt text](https://upload.wikimedia.org/wikipedia/commons/f/f2/Exokernel_revised%28english%29.png)
