@@ -1,16 +1,16 @@
-#ifndef JOS_STAB_H
-#define JOS_STAB_H
+#ifndef DEOS_STAB_H
+#define DEOS_STAB_H
 #include <inc/types.h>
 
 // <inc/stab.h>
 // STABS debugging info
 
-// The JOS kernel debugger can understand some debugging information
+// The DEOS kernel debugger can understand some debugging information
 // in the STABS format.  For more information on this format, see
 // http://sourceware.org/gdb/onlinedocs/stabs.html
 
 // The constants below define some symbol types used by various debuggers
-// and compilers.  JOS uses the N_SO, N_SOL, N_FUN, and N_SLINE types.
+// and compilers.  DEOS uses the N_SO, N_SOL, N_FUN, and N_SLINE types.
 
 #define	N_GSYM		0x20	// global symbol
 #define	N_FNAME		0x22	// F77 function name
@@ -48,4 +48,4 @@ struct Stab {
 	uintptr_t n_value;	// value of symbol
 };
 
-#endif /* !JOS_STAB_H */
+#endif /* !DEOS_STAB_H */

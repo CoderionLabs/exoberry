@@ -1,10 +1,10 @@
 /assets
 /obj
-/jos.in
-/jos.log
-/jos.out
-/jos.out.*
-/jos.cmd
+/deos.in
+/deos.log
+/deos.out
+/deos.out.*
+/deos.cmd
 /.gdbinit
 /wget.log
 /qemu.pcap

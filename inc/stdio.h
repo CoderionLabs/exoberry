@@ -1,5 +1,5 @@
-#ifndef JOS_INC_STDIO_H
-#define JOS_INC_STDIO_H
+#ifndef DEOS_INC_STDIO_H
+#define DEOS_INC_STDIO_H
 
 #include <inc/stdarg.h>
 
@@ -30,4 +30,4 @@ int	vfprintf(int fd, const char *fmt, va_list);
 // lib/readline.c
 char*	readline(const char *prompt);
 
-#endif /* !JOS_INC_STDIO_H */
+#endif /* !DEOS_INC_STDIO_H */

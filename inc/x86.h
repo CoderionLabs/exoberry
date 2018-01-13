@@ -1,5 +1,5 @@
-#ifndef JOS_INC_X86_H
-#define JOS_INC_X86_H
+#ifndef DEOS_INC_X86_H
+#define DEOS_INC_X86_H
 
 #include <inc/types.h>
 
@@ -261,4 +261,4 @@ xchg(volatile uint32_t *addr, uint32_t newval)
 	return result;
 }
 
-#endif /* !JOS_INC_X86_H */
+#endif /* !DEOS_INC_X86_H */

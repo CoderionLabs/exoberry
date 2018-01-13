@@ -1,5 +1,5 @@
-#ifndef JOS_INC_ELF_H
-#define JOS_INC_ELF_H
+#ifndef DEOS_INC_ELF_H
+#define DEOS_INC_ELF_H
 
 #define ELF_MAGIC 0x464C457FU	/* "\x7FELF" in little endian */
 
@@ -62,4 +62,4 @@ struct Secthdr {
 // Values for Secthdr::sh_name
 #define ELF_SHN_UNDEF		0
 
-#endif /* !JOS_INC_ELF_H */
+#endif /* !DEOS_INC_ELF_H */

@@ -1,5 +1,5 @@
 #
-# Makefile fragment for JOS kernel.
+# Makefile fragment for DEOS kernel.
 # This is NOT a complete makefile;
 # you must run GNU make in the top-level directory
 # where the GNUmakefile is located.
@@ -82,8 +82,8 @@ $(OBJDIR)/kern/kernel.img: $(OBJDIR)/kern/kernel $(OBJDIR)/boot/boot
 
 all: $(OBJDIR)/kern/kernel.img
 
-grub: $(OBJDIR)/jos-grub
+grub: $(OBJDIR)/deos-grub
 
-$(OBJDIR)/jos-grub: $(OBJDIR)/kern/kernel
+$(OBJDIR)/deos-grub: $(OBJDIR)/kern/kernel
 	@echo + oc $@
 	$(V)$(OBJCOPY) --adjust-vma=0x10000000 $^ $@

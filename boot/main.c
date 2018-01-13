@@ -88,7 +88,7 @@ readseg(uint32_t pa, uint32_t count, uint32_t offset)
 		// Since we haven't enabled paging yet and we're using
 		// an identity segment mapping (see boot.S), we can
 		// use physical addresses directly.  This won't be the
-		// case once JOS enables the MMU.
+		// case once DEOS enables the MMU.
 		readsect((uint8_t*) pa, offset);
 		pa += SECTSIZE;
 		offset++;

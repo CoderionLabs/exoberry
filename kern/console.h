@@ -2,8 +2,8 @@
 
 #ifndef _CONSOLE_H_
 #define _CONSOLE_H_
-#ifndef JOS_KERNEL
-# error "This is a JOS kernel header; user programs should not #include it"
+#ifndef DEOS_KERNEL
+# error "This is a DEOS kernel header; user programs should not #include it"
 #endif
 
 #include <inc/types.h>

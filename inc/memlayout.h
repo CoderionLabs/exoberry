@@ -1,5 +1,5 @@
-#ifndef JOS_INC_MEMLAYOUT_H
-#define JOS_INC_MEMLAYOUT_H
+#ifndef DEOS_INC_MEMLAYOUT_H
+#define DEOS_INC_MEMLAYOUT_H
 
 #ifndef __ASSEMBLER__
 #include <inc/types.h>
@@ -79,7 +79,7 @@
  *
  * (*) Note: The kernel ensures that "Invalid Memory" is *never* mapped.
  *     "Empty Memory" is normally unmapped, but user programs may map pages
- *     there if desired.  JOS user programs map pages temporarily at UTEMP.
+ *     there if desired.  DEOS user programs map pages temporarily at UTEMP.
  */
 
 
@@ -144,4 +144,4 @@ typedef uint32_t pte_t;
 typedef uint32_t pde_t;
 
 #endif /* !__ASSEMBLER__ */
-#endif /* !JOS_INC_MEMLAYOUT_H */
+#endif /* !DEOS_INC_MEMLAYOUT_H */

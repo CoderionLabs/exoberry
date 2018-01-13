@@ -1,4 +1,4 @@
-# env.mk - configuration variables for the JOS lab
+# env.mk - configuration variables for the DEOS lab
 
 # '$(V)' controls whether the lab makefiles print verbose commands (the
 # actual shell commands run by Make), as well as the "overview" commands
@@ -9,7 +9,7 @@
 V = @
 
 # If your system-standard GNU toolchain is ELF-compatible, then comment
-# out the following line to use those tools (as opposed to the i386-jos-elf
+# out the following line to use those tools (as opposed to the i386-deos-elf
 # tools that the 6.828 make system looks for by default).
 #
 # GCCPREFIX=''
