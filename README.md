@@ -1,6 +1,6 @@
 DEOS
 =======================
-**[Mailing List](https://docs.google.com/forms/d/e/1FAIpQLSes4ibh1F-PTGdaPns6k446ODwOSNaju3DksLgOB_ZoIMu_Q/viewform?usp=sf_link)
+**[Mailing List](https://docs.google.com/forms/d/e/1FAIpQLSes4ibh1F-PTGdaPns6k446ODwOSNaju3DksLgOB_Zo-IMu_Q/viewform?usp=sf_link)
 | [![Build Status](https://travis-ci.org/friedrich12/DEOS.svg?branch=master)](https://travis-ci.org/friedrich12/DEOS)**
 
 
