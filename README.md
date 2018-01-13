@@ -41,22 +41,22 @@ Compiling Haiku
 ---------------
 Clone the repository.
 
-'''
+```
 $ git clone https://github.com/friedrich12/DEOS/ DEOS
-'''
+```
 Make sure gcc-multilib is installed.
 
-'''
+```
 $ sudo apt-get update
 $ sudo apt-get install gcc-multilib
-'''
+```
 
 Go to directory and run make and make qemu.
-'''
+```
 $ cd DEOS
 $ make
 $ make qemu
-'''
+```
 
 Contributing
 -------------------
