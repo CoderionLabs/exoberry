@@ -1,6 +1,6 @@
 DEOS
 =======================
-**[Mailing Lists](https://docs.google.com/forms/d/e/1FAIpQLSes4ibh1F-PTGdaPns6k446ODwOSNaju3DksLgOB_ZoIMu_Q/viewform?usp=sf_link)
+**[Mailing List](https://docs.google.com/forms/d/e/1FAIpQLSes4ibh1F-PTGdaPns6k446ODwOSNaju3DksLgOB_ZoIMu_Q/viewform?usp=sf_link)
 | [![Build Status](https://travis-ci.org/friedrich12/DEOS.svg?branch=master)](https://travis-ci.org/friedrich12/DEOS)**
 
 
@@ -63,8 +63,7 @@ Contributing
 DEOS is a meritocratic open source project with a large variety of tasks. Even if you can't write code, you can still help! DEOS needs designers, \(technical\) writers, translators, testers... Get involved and help out!
 
 ## Contributing code
-If you're submitting a patch, please make sure you're following the
-[patch submitting guidelines](https://github.com/friedrich12/DEOS/PATCHES.md).
+To submit code fork this respository and submit a pull request like usual. 
 
 ## Contributing documentation
 Write now nothing is really documented. Just find an undocumented class, write
