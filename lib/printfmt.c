@@ -44,7 +44,7 @@ printnum(void (*putch)(int, void*), void *putdat,
 		while (--width > 0)
 			putch(padc, putdat);
 	}
-	
+
 	// then print this (the least significant) digit
 	putch("0123456789abcdef"[num % base], putdat);
 }
