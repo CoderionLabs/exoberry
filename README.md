@@ -67,7 +67,7 @@ To submit code fork this respository and submit a pull request like usual.
 
 ## Contributing documentation
 Write now nothing is really documented. Just find an undocumented class, write
-documentation for it, and [submit a patch](https://github.com/friedrich12/DEOS/PATCHES.md).
+documentation for it, and [submit a patch](https://github.com/friedrich12/DEOS/blob/master/PATCHES.md).
 
 ## Contributing software ports
 Right now there is not a software porter see issue 8.
