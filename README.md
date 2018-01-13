@@ -37,7 +37,7 @@ Trying DEOS
 ---------------
 DOES right now does not provide images. See Compiling to create and image.
 
-Compiling Haiku
+Compiling DEOS
 ---------------
 Clone the repository.
 
