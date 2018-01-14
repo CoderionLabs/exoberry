@@ -35,7 +35,7 @@ Goals
 
 Trying DEOS
 ---------------
-DOES right now does not provide images. See Compiling to create and image.
+DOES right now does not provide images. See Compiling to create an image.
 
 Compiling DEOS
 ---------------
