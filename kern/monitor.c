@@ -24,6 +24,8 @@ struct Command {
 static struct Command commands[] = {
 	{ "help", "Display this list of commands", mon_help },
 	{ "kerninfo", "Display information about the kernel", mon_kerninfo },
+	{ "shutdown", "Shutdown the system", mon_kerninfo },
+	{ "backtrace", "Debug some code", mon_backtrace },
 };
 
 /***** Implementations of basic kernel monitor commands *****/
@@ -35,6 +37,13 @@ mon_help(int argc, char **argv, struct Trapframe *tf)
 
 	for (i = 0; i < ARRAY_SIZE(commands); i++)
 		cprintf("%s - %s\n", commands[i].name, commands[i].desc);
+	return 0;
+}
+
+int
+mon_shutdown(int argc, char **argv, struct Trapframe *tf)
+{
+	cprintf("Does nothing right now/n");
 	return 0;
 }
 
