@@ -63,10 +63,39 @@ mon_kerninfo(int argc, char **argv, struct Trapframe *tf)
 	return 0;
 }
 
+// If there is another base pointer than keep going
+#define bt_arg(N) ((ebp + N + 1) < last_ebp ? ebp[N + 1] : 0)
+
 int
 mon_backtrace(int argc, char **argv, struct Trapframe *tf)
 {
-	// Your code here.
+
+	uint32_t *ebp, *last_ebp;  		// Base pointer and last ebp on stack
+    struct Eipdebuginfo info;  		// Debug information about a particular instruction pointer
+    ebp = (uint32_t *) read_ebp();	// Reads base pointer
+
+    cprintf("Stack backtrace:\n");
+	
+	// Use the chain of base pointers to figure out who called who
+    while (ebp) {
+        last_ebp = (uint32_t *) ebp[0]; // Last basepointer on stack
+        cprintf("ebp %08x eip %08x args %08x %08x %08x %08x %08x\n",
+                ebp,
+                *(ebp + 1),
+                bt_arg(1),
+                bt_arg(2),
+                bt_arg(3),
+                bt_arg(4),
+                bt_arg(5));
+
+        debuginfo_eip(*(ebp + 1), &info);  // Fills in the info parm with information about the instruction address
+        cprintf("\t%s:%d: %.*s+%d\n", info.eip_file, info.eip_line,
+                info.eip_fn_namelen,
+                info.eip_fn_name,
+                ebp[1] - info.eip_fn_addr);
+        ebp = last_ebp;
+    }
+
 	return 0;
 }
 

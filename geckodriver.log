@@ -1,0 +1,18 @@
+1516910546318	geckodriver	INFO	geckodriver 0.19.1
+1516910546326	geckodriver	INFO	Listening on 127.0.0.1:42069
+*** You are running in headless mode.
+1516910547875	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.CfVUelFy2Mo7"
+*** You are running in headless mode.
+1516910548717	addons.xpi	WARN	Can't get modified time of /usr/lib64/firefox/browser/features/aushelper@mozilla.org.xpi
+1516910549165	addons.xpi-utils	WARN	addMetadata: Add-on aushelper@mozilla.org is invalid: [Exception... "Component returned failure code: 0x80520006 (NS_ERROR_FILE_TARGET_DOES_NOT_EXIST) [nsIFile.isFile]"  nsresult: "0x80520006 (NS_ERROR_FILE_TARGET_DOES_NOT_EXIST)"  location: "JS frame :: resource://gre/modules/addons/XPIInstall.jsm :: this.loadManifestFromFile :: line 971"  data: no] Stack trace: this.loadManifestFromFile()@resource://gre/modules/addons/XPIInstall.jsm:971 < syncLoadManifestFromFile()@resource://gre/modules/addons/XPIProvider.jsm:947 < addMetadata()@resource://gre/modules/addons/XPIProvider.jsm -> resource://gre/modules/addons/XPIProviderUtils.js:1231 < processFileChanges()@resource://gre/modules/addons/XPIProvider.jsm -> resource://gre/modules/addons/XPIProviderUtils.js:1578 < checkForChanges()@resource://gre/modules/addons/XPIProvider.jsm:3278 < startup()@resource://gre/modules/addons/XPIProvider.jsm:2182 < callProvider()@resource://gre/modules/AddonManager.jsm:263 < _startProvider()@resource://gre/modules/AddonManager.jsm:730 < startup()@resource://gre/modules/AddonManager.jsm:897 < startup()@resource://gre/modules/AddonManager.jsm:3081 < observe()@jar:file:///usr/lib64/firefox/omni.ja!/components/addonManager.js:65
+1516910549169	addons.xpi-utils	WARN	Could not uninstall invalid item from locked install location
+1516910549471	Marionette	INFO	Enabled via --marionette
+1516910552371	addons.xpi	WARN	Can't get modified time of /usr/lib64/firefox/browser/features/aushelper@mozilla.org.xpi
+1516910553407	Marionette	INFO	Listening on port 37907
+1516910553469	Marionette	WARN	TLS certificate errors will be ignored for this session
+1516910553820	Marionette	DEBUG	Register listener.js for window 2147483649
+1516910626508	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1516910626690	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1516910626692	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+1516910627755	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "http://protobowl.com/science"
+1516910632495	Marionette	DEBUG	Received DOM event "pageshow" for "http://protobowl.com/science"
