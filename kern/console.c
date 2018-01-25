@@ -1,5 +1,4 @@
 /* See COPYRIGHT for copyright information. */
-
 #include <inc/x86.h>
 #include <inc/memlayout.h>
 #include <inc/kbdreg.h>
@@ -122,8 +121,6 @@ lpt_putc(int c)
 	outb(0x378+2, 0x08|0x04|0x01);
 	outb(0x378+2, 0x08);
 }
-
-
 
 
 /***** Text-mode CGA/VGA display output *****/
