@@ -14,10 +14,6 @@ That targets distributed systems such as clusters and grids. DEOS is designed fo
 and performace on these systems should be better than the average OS. This project is inspired from
 Dawson Engler's work of the M.I.T exokernel.
 
-Haiku is an open-source operating system that specifically targets personal
-computing. Inspired by the BeOS, Haiku is fast, simple to use, easy to learn
-and yet very powerful.
-
 **Motivation**
 
 Traditionally kernel designers have sought to make individual hardware resources invisible to application programs by requiring the programs to interact with the hardware via some abstraction model. These models include file systems for disk storage, virtual address spaces for memory, schedulers for task management, and sockets for network communication. These abstractions of the hardware make it easier to write programs in general, but limit performance and stifle experimentation in new abstractions. A security-oriented application might need a file system that does not leave old data on the disk, while a reliability-oriented application might need a file system that keeps such data for failure recovery.
@@ -26,7 +22,6 @@ One option is to remove the kernel completely and program directly to the hardwa
 
 Goals
 ------------
- * Clean, code. 
  * Minimal configuration required.
  * Clean, clear, concise code.
  * High performance for web servers.
@@ -35,7 +30,7 @@ Goals
 
 Trying DEOS
 ---------------
-DOES right now does not provide images. See Compiling to create an image.
+DEOS does not currently provide images. See [Compiling DEOS](#compiling-deos) for instructions on creating an image.
 
 Compiling DEOS
 ---------------
@@ -60,17 +55,17 @@ $ make qemu
 
 Contributing
 -------------------
-DEOS is a meritocratic open source project with a large variety of tasks. Even if you can't write code, you can still help! DEOS needs designers, \(technical\) writers, translators, testers... Get involved and help out!
+DEOS is a meritocratic open source project with a large variety of tasks. Even if you can't write code, you can still help! DEOS needs designers, \(technical\) writers, translators, testers ... Get involved and help out!
 
 ## Contributing code
 To submit code fork this respository and submit a pull request like usual. 
 
 ## Contributing documentation
-Write now nothing is really documented. Just find an undocumented class, write
+Right now nothing is really documented. Just find an undocumented class, write
 documentation for it, and [submit a patch](https://github.com/friedrich12/DEOS/blob/master/PATCHES.md).
 
 ## Contributing software ports
-Right now there is not a software porter see issue 8.
+Right now there is not a software porter, see issue #8.
 
 ## Exokernel?
 
