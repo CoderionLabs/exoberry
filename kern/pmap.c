@@ -114,29 +114,13 @@ boot_alloc(uint32_t n)
 	// to a multiple of PGSIZE.
 	//
 	// LAB 2: Your code here.
-
-	if (firstrun){
-		firstrun = false;
-		if(n == 0){
-
-		}else if(n > 0){
-			uint32_t need = 0;
-			uint32_t pages = n / PGSIZE;
-
-			if(n < PGSIZE){
-				need = 4096;
-			}else if(n > pages){
-				while(need >= n){
-					need + 4096;
-				}
-
-				uint32_t num_of_pages = need / 4096;
-				for(int i = 0; i < num_of_pages; i++){
-					page_alloc(0);
-				}
-			}
-		}	
-	}
+	cprintf("Next free is %x\n", nextfree);
+	cprintf("Next free to hold 'n' bytes address is %x\n", ROUNDUP((char *) nextfree+n, PGSIZE));
+	if(n != 0){
+		char *next = nextfree;
+		nextfree = ROUNDUP((char *) nextfree+n, PGSIZE);
+		return next;
+	} else return nextfree;
 
 	return NULL;
 }
@@ -158,10 +142,10 @@ mem_init(void)
 
 	// Find out how much memory the machine has (npages & npages_basemem).
 	i386_detect_memory();
-	firstrun = true;
+	//firstrun = true;
 
 	// Remove this line when you're ready to test this function.
-	panic("mem_init: This function is not finished\n");
+	//panic("mem_init: This function is not finished\n");
 
 	//////////////////////////////////////////////////////////////////////
 	// create initial page directory.
@@ -184,7 +168,8 @@ mem_init(void)
 	// array.  'npages' is the number of physical pages in memory.  Use memset
 	// to initialize all fields of each struct PageInfo to 0.
 	// Your code goes here:
-
+	pages = (struct PageInfo *) boot_alloc(sizeof(struct PageInfo) * npages);
+	memset(pages, 0, sizeof(struct PageInfo)*npages);
 
 	//////////////////////////////////////////////////////////////////////
 	// Now that we've allocated the initial kernel data structures, we set
@@ -200,7 +185,7 @@ mem_init(void)
 
 	//////////////////////////////////////////////////////////////////////
 	// Now we set up virtual memory
-
+	boot_map_region();
 	//////////////////////////////////////////////////////////////////////
 	// Map 'pages' read-only by the user at linear address UPAGES
 	// Permissions:
@@ -208,6 +193,7 @@ mem_init(void)
 	//      (ie. perm = PTE_U | PTE_P)
 	//    - pages itself -- kernel RW, user NONE
 	// Your code goes here:
+	
 
 	//////////////////////////////////////////////////////////////////////
 	// Use the physical memory that 'bootstack' refers to as the kernel
@@ -363,7 +349,18 @@ pte_t *
 pgdir_walk(pde_t *pgdir, const void *va, int create)
 {
 	// Fill this function in
-	return NULL;
+	int dex = PDX(va); int tex = PTX(va);
+	if(!(pgdir[dex] & PTE_P)){
+		if(create){
+			struct PageInfo* page = page_alloc(ALLOC_ZERO);
+			page = pa2page(page);
+			if(!page) return NULL;
+			page->pp_ref++;
+			pgdir[dex] = page2pa(page) | PTE_U | PTE_P | PTE_W;
+		} else return NULL;
+	}
+	pte_t *addr = KADDR(PTE_ADDR(pgdir[dex]));
+	return addr + tex;
 }
 
 //
@@ -380,7 +377,7 @@ pgdir_walk(pde_t *pgdir, const void *va, int create)
 static void
 boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, physaddr_t pa, int perm)
 {
-	// Fill this function in
+	
 }
 
 //
