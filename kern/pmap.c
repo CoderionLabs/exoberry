@@ -185,7 +185,7 @@ mem_init(void)
 
 	//////////////////////////////////////////////////////////////////////
 	// Now we set up virtual memory
-	boot_map_region();
+	// TODO: FIX THIS boot_map_region();
 	//////////////////////////////////////////////////////////////////////
 	// Map 'pages' read-only by the user at linear address UPAGES
 	// Permissions:
@@ -353,7 +353,7 @@ pgdir_walk(pde_t *pgdir, const void *va, int create)
 	if(!(pgdir[dex] & PTE_P)){
 		if(create){
 			struct PageInfo* page = page_alloc(ALLOC_ZERO);
-			page = pa2page(page);
+			page = pa2page( (physaddr_t *) page);
 			if(!page) return NULL;
 			page->pp_ref++;
 			pgdir[dex] = page2pa(page) | PTE_U | PTE_P | PTE_W;
