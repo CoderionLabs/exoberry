@@ -10,6 +10,7 @@
 /qemu.pcap
 /qemu.pcap.*
 /qemu.out
+/jos.out
 /qemu.log
 /gradelib.pyc
 /.vscode
@@ -19,3 +20,6 @@
 /myapi.key
 /.suf
 /.out
+/gradelib
+/grade-lab1
+/gradelib.pyc

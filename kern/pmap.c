@@ -142,10 +142,8 @@ mem_init(void)
 
 	// Find out how much memory the machine has (npages & npages_basemem).
 	i386_detect_memory();
-	//firstrun = true;
 
-	// Remove this line when you're ready to test this function.
-	//panic("mem_init: This function is not finished\n");
+	panic("mem_init: This function is not finished\n");
 
 	//////////////////////////////////////////////////////////////////////
 	// create initial page directory.
@@ -193,7 +191,11 @@ mem_init(void)
 	//      (ie. perm = PTE_U | PTE_P)
 	//    - pages itself -- kernel RW, user NONE
 	// Your code goes here:
-	
+	boot_map_region(kern_pgdir, 
+		UPAGES, 
+		PTSIZE, 
+		PADDR(pages), 
+		PTE_U);
 
 	//////////////////////////////////////////////////////////////////////
 	// Use the physical memory that 'bootstack' refers to as the kernel
@@ -206,6 +208,11 @@ mem_init(void)
 	//       overwrite memory.  Known as a "guard page".
 	//     Permissions: kernel RW, user NONE
 	// Your code goes here:
+	boot_map_region(kern_pgdir,
+		KSTACKTOP-KSTKSIZE,
+		KSTKSIZE,
+		PADDR(pages),
+		PTE_W);
 
 	//////////////////////////////////////////////////////////////////////
 	// Map all of physical memory at KERNBASE.
@@ -215,6 +222,11 @@ mem_init(void)
 	// we just set up the mapping anyway.
 	// Permissions: kernel RW, user NONE
 	// Your code goes here:
+	boot_map_region(kern_pgdir,
+		KERNBASE,
+		-KERNBASE,
+		0,
+		PTE_W);
 
 	// Check that the initial page directory has been set up correctly.
 	check_kern_pgdir();
@@ -296,8 +308,15 @@ page_init(void)
 struct PageInfo *
 page_alloc(int alloc_flags)
 {
-	// Fill this function in
-	return 0;
+	if(page_free_list){
+		struct PageInfo* ret = page_free_list;
+		page_free_list = page_free_list->pp_link;
+		if(alloc_flags & ALLOC_ZERO){
+			memset(page2kva(ret), 0, PGSIZE);
+		}
+		return ret;
+	}
+	return NULL;
 }
 
 //
@@ -310,6 +329,10 @@ page_free(struct PageInfo *pp)
 	// Fill this function in
 	// Hint: You may want to panic if pp->pp_ref is nonzero or
 	// pp->pp_link is not NULL.
+	if(pp->pp_ref != 0){panic("Page failed");};
+
+	pp->pp_link = page_free_list;
+	page_free_list = pp;
 }
 
 //
@@ -353,7 +376,7 @@ pgdir_walk(pde_t *pgdir, const void *va, int create)
 	if(!(pgdir[dex] & PTE_P)){
 		if(create){
 			struct PageInfo* page = page_alloc(ALLOC_ZERO);
-			page = pa2page( (physaddr_t *) page);
+			page = pa2page( (physaddr_t) page);
 			if(!page) return NULL;
 			page->pp_ref++;
 			pgdir[dex] = page2pa(page) | PTE_U | PTE_P | PTE_W;
@@ -377,7 +400,12 @@ pgdir_walk(pde_t *pgdir, const void *va, int create)
 static void
 boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, physaddr_t pa, int perm)
 {
-	
+	cprintf("Mapping physical to virtual\n");
+	for(int i = 0; i < size/PGSIZE; i++, va+=PGSIZE, pa+=PGSIZE){
+		pte_t *pte = pgdir_walk(pgdir, (void *) va,1);
+		if(!pte){cprintf("Unable to create");};
+		*pte = pa | perm | PTE_P;
+	}
 }
 
 //
