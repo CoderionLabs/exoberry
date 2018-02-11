@@ -4,7 +4,7 @@ DEOS
 | [![Build Status](https://travis-ci.org/friedrich12/DEOS.svg?branch=master)](https://travis-ci.org/friedrich12/DEOS)**
 
 
-![alt text](https://upload.wikimedia.org/wikipedia/commons/f/f2/Exokernel_revised%28english%29.png)
+![alt text](http://fdoku.com/deos/images/deosimg.png)
 
 
 Graphic overview of an exokernel. Exokernels are much smaller than a normal kernels \(monolithic kernels\). They give more direct access to the hardware, thus removing most abstractions
