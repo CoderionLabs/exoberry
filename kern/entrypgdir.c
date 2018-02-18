@@ -41,7 +41,7 @@ pde_t entry_pgdir[NPDENTRIES] = {
 };
 
 // Entry 0 of the page table maps to physical page 0, entry 1 to
-// physical page 1, etc.We do this using the hand-written, statically-initialized page directory and page table in kern/entrypgdir.c.
+// physical page 1, etc.
 __attribute__((__aligned__(PGSIZE)))
 pte_t entry_pgtable[NPTENTRIES] = {
     LVL10(0)

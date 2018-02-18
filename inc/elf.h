@@ -1,3 +1,6 @@
+// Format of an ELF executable file
+
+
 #ifndef DEOS_INC_ELF_H
 #define DEOS_INC_ELF_H
 

@@ -1,5 +1,6 @@
 #include <inc/x86.h>
 #include <inc/elf.h>
+#include <kern/kdebug.h>
 
 /**********************************************************************
  * This a dirt simple boot loader, whose sole job is to boot

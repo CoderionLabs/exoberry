@@ -10,6 +10,7 @@
 #include <kern/console.h>
 #include <kern/monitor.h>
 #include <kern/kdebug.h>
+#include <kern/pmap.h>
 
 #define CMDBUF_SIZE	80	// enough for one VGA text line
 
@@ -37,6 +38,10 @@ mon_help(int argc, char **argv, struct Trapframe *tf)
 
 	for (i = 0; i < ARRAY_SIZE(commands); i++)
 		cprintf("%s - %s\n", commands[i].name, commands[i].desc);
+
+	cprintf("Testing Physical Memory Allocator ");
+	mem_init();
+	
 	return 0;
 }
 
