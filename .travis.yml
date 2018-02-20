@@ -1,4 +1,7 @@
-language: go
+language: c
+compiler: gcc	
 before_install:
-  - go get github.com/boltdb/bolt/...
-script: ./run.bat
+  - sudo apt-get update -qq	
+  - sudo apt-get install gcc-multilib
+  - sudo apt-get install qemu -qqy	
+script: make
