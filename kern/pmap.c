@@ -448,20 +448,19 @@ boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, physaddr_t pa, int perm
 int
 page_insert(pde_t *pgdir, struct PageInfo *pp, void *va, int perm)
 {
-	cprintf("Mapping physical to virtual");
-	// Get pointer to page table entry for address va
-	pte_t = *pte = pgdir_walk(pgdir, va, 1);
-	if(*pte == NULL){
-		return -E_NO_MEM;
-	}
+	// Get the linear address for va
+    pte_t *pte = pgdir_walk(pgdir, va, 1);
+	// Memory shortage can't allocate
+    if (pte == NULL)  return -E_NO_MEM;
 
-	pp->pp_ref++;
-	if((pte) & PTE_P){
-		page_remove(pte, va);
-	}
-	
-	*pte = page2pa(pp) | perm | PTE_P;
-	pgdir[PDX[va]] |= perm;
+	// Add pointer to this page
+    pp->pp_ref++;
+	// Check if a page is already mapped at va
+    if (*pte & PTE_P)
+		//remove the page then
+		page_remove(pgdir, va);
+	// Set the permissions
+    *pte = page2pa(pp) | perm | PTE_P;
 
 	return 0;
 }
@@ -481,7 +480,14 @@ struct PageInfo *
 page_lookup(pde_t *pgdir, void *va, pte_t **pte_store)
 {
 	// Fill this function in
-	return NULL;
+	pte_t *pte = pgdir_walk(pgdir,va,0);
+	if(pte_store){
+		*pte_store = pte;
+	}
+	// If there is nothing found
+	if(pte == NULL || !(*pte | PTE_P)) return NULL;
+	struct PageInfo *pp = pa2page(PTE_ADDR(*pte));
+	return pp;
 }
 
 //
@@ -502,9 +508,14 @@ page_lookup(pde_t *pgdir, void *va, pte_t **pte_store)
 void
 page_remove(pde_t *pgdir, void *va)
 {
-	// Fill this function in
-	page_lookup
-	page_decref();
+	pte_t *pte = NULL;
+	struct PageInfo *pp = page_lookup(pgdir,va,&pte);
+	if(pte == NULL){
+		return;
+	}
+	*pte = (pte_t) 0;
+	tlb_invalidate(pgdir,va);
+	page_decref(pp);
 }
 
 //
