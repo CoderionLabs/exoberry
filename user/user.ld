@@ -1,4 +1,4 @@
-/* Simple linker script for JOS user-level programs.
+/* Simple linker script for DEOS user-level programs.
    See the GNU ld 'info' manual ("info ld") to learn the syntax. */
 
 OUTPUT_FORMAT("elf32-i386", "elf32-i386", "elf32-i386")

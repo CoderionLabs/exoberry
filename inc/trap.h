@@ -1,5 +1,5 @@
-#ifndef JOS_INC_TRAP_H
-#define JOS_INC_TRAP_H
+#ifndef DEOS_INC_TRAP_H
+#define DEOS_INC_TRAP_H
 
 // Trap numbers
 // These are processor defined:
@@ -77,4 +77,4 @@ struct Trapframe {
 
 #endif /* !__ASSEMBLER__ */
 
-#endif /* !JOS_INC_TRAP_H */
+#endif /* !DEOS_INC_TRAP_H */

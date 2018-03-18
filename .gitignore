@@ -10,7 +10,7 @@
 /qemu.pcap
 /qemu.pcap.*
 /qemu.out
-/jos.out
+/deos.out
 /qemu.log
 /gradelib.pyc
 /.vscode
