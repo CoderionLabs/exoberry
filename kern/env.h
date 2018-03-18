@@ -1,7 +1,7 @@
 /* See COPYRIGHT for copyright information. */
 
-#ifndef JOS_KERN_ENV_H
-#define JOS_KERN_ENV_H
+#ifndef DEOS_KERN_ENV_H
+#define DEOS_KERN_ENV_H
 
 #include <inc/env.h>
 
@@ -32,4 +32,4 @@ void	env_pop_tf(struct Trapframe *tf) __attribute__((noreturn));
 			   type);					\
 	} while (0)
 
-#endif // !JOS_KERN_ENV_H
+#endif // !DEOS_KERN_ENV_H
