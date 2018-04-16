@@ -116,7 +116,14 @@ env_init(void)
 {
 	// Set up envs array
 	// LAB 3: Your code here.
-
+	
+	env_free_list = envs;
+	for(int i = 0; i < NENV; i++){
+		envs[i].env_id = 0;
+		// Could be NULL
+		envs[i].env_status = (i == NENV-1) ? NULL : ENV_FREE;
+		envs[i].env_link = &envs[i+1];
+	}
 	// Per-CPU part of the initialization
 	env_init_percpu();
 }
@@ -142,9 +149,8 @@ env_init_percpu(void)
 	lldt(0);
 }
 
-//
-// Initialize the kernel virtual memory layout for environment e.
-// Allocate a page directory, set e->env_pgdir accordingly,
+// Initializes the kernel virtual memory layout for environment e.
+// Allocates a page directory, set e->env_pgdir accordingly,
 // and initialize the kernel portion of the new environment's address space.
 // Do NOT (yet) map anything into the user portion
 // of the environment's virtual address space.
@@ -162,23 +168,13 @@ env_setup_vm(struct Env *e)
 	if (!(p = page_alloc(ALLOC_ZERO)))
 		return -E_NO_MEM;
 
-	// Now, set e->env_pgdir and initialize the page directory.
-	//
-	// Hint:
-	//    - The VA space of all envs is identical above UTOP
-	//	(except at UVPT, which we've set below).
-	//	See inc/memlayout.h for permissions and layout.
-	//	Can you use kern_pgdir as a template?  Hint: Yes.
-	//	(Make sure you got the permissions right in Lab 2.)
-	//    - The initial VA below UTOP is empty.
-	//    - You do not need to make any more calls to page_alloc.
-	//    - Note: In general, pp_ref is not maintained for
-	//	physical pages mapped only above UTOP, but env_pgdir
-	//	is an exception -- you need to increment env_pgdir's
-	//	pp_ref for env_free to work correctly.
-	//    - The functions in kern/pmap.h are handy.
+	// set e->env_pgdir and initialize the page directory.
 
-	// LAB 3: Your code here.
+	p->pp_ref++;
+	e->env_pgdir = (pde_t*) page2kva(p);
+	for(int i = 0; i < NPDENTRIES; i++){
+		e->env_pgdir[i] = i < PDX(UTOP) ? NULL: kern_pgdir[i];
+	}
 
 	// UVPT maps the env's own page table read-only.
 	// Permissions: kernel R, user R
@@ -267,6 +263,7 @@ region_alloc(struct Env *e, void *va, size_t len)
 	//   'va' and 'len' values that are not page-aligned.
 	//   You should round va down, and round (va + len) up.
 	//   (Watch out for corner-cases!)
+	
 }
 
 //

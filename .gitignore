@@ -19,7 +19,10 @@
 /sol?/
 /myapi.key
 /.suf
-/.out
+/.out*
 /gradelib
 /grade-lab1
-/gradelib.pyc
+/tests
+/gradelib.py
+
+/grade-lab3
