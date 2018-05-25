@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The DEOS Authors
+ * * Copyright 2018 The DEOS Authors
  * Copyright (c) 2008-2014 Travis Geiselbrecht
  * Copyright (c) 2012-2012 Shantanu Gupta
  */
