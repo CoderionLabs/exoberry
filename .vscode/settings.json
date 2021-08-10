@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "app.h": "c",
-        "assert.h": "c",
-        "minip-internal.h": "c"
-    }
-}
