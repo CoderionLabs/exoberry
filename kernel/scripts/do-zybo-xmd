@@ -1,6 +1,0 @@
-#!/bin/sh
-
-PROJECT=zybo-test
-
-make $PROJECT -j &&
-xmd -tcl scripts/xmd.tcl $PROJECT

@@ -1,3 +1,0 @@
-#!/bin/sh
-
-astyle --style=k/r --align-pointer=name --lineend=linux --indent=tab=4 --indent-switches --keep-one-line-blocks --pad-header --convert-tabs $@

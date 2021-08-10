@@ -1,6 +1,0 @@
-LOCAL_DIR := DEOS
-LKMAKEROOT := ..
-LKROOT := /home/professor/Documents/DEOS/kernel
-LKINC := $(LOCAL_DIR)
-DEFAULT_PROJECT ?=
-BUILDROOT ?= $(LOCAL_DIR)
