@@ -1,0 +1,774 @@
+/*
+ * Copyright (C) 2021 Friedrich Doku
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ 
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+#include "mm.h"
+#include "sched.h"
+#include "fork.h"
+#include "utils.h"
+#include "entry.h"
+
+int copy_process(unsigned long clone_flags, unsigned long fn, unsigned long arg)
+{
+	preempt_disable();
+	struct task_struct * p;
+
+	unsigned long page		   = allocate_kernel_page();
+	p						   = (struct task_struct *)page;
+	struct pt_regs * childregs = task_pt_regs(p);
+
+	if (!p)
+		return -1;
+
+	if (clone_flags & PF_KTHREAD) {
+		p->cpu_context.x19 = fn;
+		p->cpu_context.x20 = arg;
+	} else {
+		struct pt_regs * cur_regs = task_pt_regs(current);
+		*childregs				  = *cur_regs;
+		childregs->regs[0]		  = 0;
+		copy_virt_memory(p);
+	}
+	p->flags		 = clone_flags;
+	p->priority		 = current->priority;
+	p->state		 = TASK_RUNNING;
+	p->counter		 = p->priority;
+	p->preempt_count = 1;	 //disable preemtion until schedule_tail
+
+	p->cpu_context.pc = (unsigned long)ret_from_fork;
+	p->cpu_context.sp = (unsigned long)childregs;
+	int pid			  = nr_tasks++;
+	task[pid]		  = p;
+
+	preempt_enable();
+	return pid;
+}
+
+
+int move_to_user_mode(unsigned long start, unsigned long size, unsigned long pc)
+{
+	struct pt_regs * regs	= task_pt_regs(current);
+	regs->pstate			= PSR_MODE_EL0t;
+	regs->pc				= pc;
+	regs->sp				= 2 * PAGE_SIZE;
+	unsigned long code_page = allocate_user_page(current, 0);
+	if (code_page == 0) {
+		return -1;
+	}
+	memcpy(code_page, start, size);
+	set_pgd(current->mm.pgd);
+	return 0;
+}
+
+struct pt_regs * task_pt_regs(struct task_struct * tsk)
+{
+	unsigned long p = (unsigned long)tsk + THREAD_SIZE - sizeof(struct pt_regs);
+	return (struct pt_regs *)p;
+}
+#include "utils.h"
+#include "printf.h"
+#include "timer.h"
+#include "entry.h"
+#include "peripherals/irq.h"
+
+const char * entry_error_messages[] = {
+	"SYNC_INVALID_EL1t",
+	"IRQ_INVALID_EL1t",
+	"FIQ_INVALID_EL1t",
+	"ERROR_INVALID_EL1T",
+
+	"SYNC_INVALID_EL1h",
+	"IRQ_INVALID_EL1h",
+	"FIQ_INVALID_EL1h",
+	"ERROR_INVALID_EL1h",
+
+	"SYNC_INVALID_EL0_64",
+	"IRQ_INVALID_EL0_64",
+	"FIQ_INVALID_EL0_64",
+	"ERROR_INVALID_EL0_64",
+
+	"SYNC_INVALID_EL0_32",
+	"IRQ_INVALID_EL0_32",
+	"FIQ_INVALID_EL0_32",
+	"ERROR_INVALID_EL0_32",
+
+	"SYNC_ERROR",
+	"SYSCALL_ERROR"};
+
+void enable_interrupt_controller()
+{
+	put32(ENABLE_IRQS_1, SYSTEM_TIMER_IRQ_1);
+}
+
+void show_invalid_entry_message(int type, unsigned long esr, unsigned long address)
+{
+	printf("%s, ESR: %x, address: %x\r\n", entry_error_messages[type], esr, address);
+}
+
+void handle_irq(void)
+{
+	unsigned int irq = get32(IRQ_PENDING_1);
+	switch (irq) {
+		case (SYSTEM_TIMER_IRQ_1):
+			handle_timer_irq();
+			break;
+		default:
+			printf("Inknown pending irq: %x\r\n", irq);
+	}
+}
+#include <stddef.h>
+#include <stdint.h>
+
+#include "printf.h"
+#include "utils.h"
+#include "timer.h"
+#include "irq.h"
+#include "fork.h"
+#include "sched.h"
+#include "mini_uart.h"
+#include "sys.h"
+#include "user.h"
+
+
+void kernel_process()
+{
+	printf("Kernel process started. EL %d\r\n", get_el());
+	unsigned long begin	  = (unsigned long)&user_begin;
+	unsigned long end	  = (unsigned long)&user_end;
+	unsigned long process = (unsigned long)&user_process;
+	int			  err	  = move_to_user_mode(begin, end - begin, process - begin);
+	if (err < 0) {
+		printf("Error while moving process to user mode\n\r");
+	}
+}
+
+
+void kernel_main()
+{
+	uart_init();
+	init_printf(NULL, putc);
+	irq_vector_init();
+	timer_init();
+	enable_interrupt_controller();
+	enable_irq();
+
+	int res = copy_process(PF_KTHREAD, (unsigned long)&kernel_process, 0);
+	if (res < 0) {
+		printf("error while starting kernel process");
+		return;
+	}
+
+	while (1) {
+		schedule();
+	}
+}
+#include "utils.h"
+#include "peripherals/mini_uart.h"
+#include "peripherals/gpio.h"
+
+void uart_send(char c)
+{
+	while (1) {
+		if (get32(AUX_MU_LSR_REG) & 0x20)
+			break;
+	}
+	put32(AUX_MU_IO_REG, c);
+}
+
+char uart_recv(void)
+{
+	while (1) {
+		if (get32(AUX_MU_LSR_REG) & 0x01)
+			break;
+	}
+	return (get32(AUX_MU_IO_REG) & 0xFF);
+}
+
+void uart_send_string(char * str)
+{
+	for (int i = 0; str[i] != '\0'; i++) {
+		uart_send((char)str[i]);
+	}
+}
+
+void uart_init(void)
+{
+	unsigned int selector;
+
+	selector = get32(GPFSEL1);
+	selector &= ~(7 << 12);	   // clean gpio14
+	selector |= 2 << 12;	   // set alt5 for gpio14
+	selector &= ~(7 << 15);	   // clean gpio15
+	selector |= 2 << 15;	   // set alt5 for gpio15
+	put32(GPFSEL1, selector);
+
+	put32(GPPUD, 0);
+	delay(150);
+	put32(GPPUDCLK0, (1 << 14) | (1 << 15));
+	delay(150);
+	put32(GPPUDCLK0, 0);
+
+	put32(AUX_ENABLES, 1);			//Enable mini uart (this also enables access to its registers)
+	put32(AUX_MU_CNTL_REG, 0);		//Disable auto flow control and disable receiver and transmitter (for now)
+	put32(AUX_MU_IER_REG, 0);		//Disable receive and transmit interrupts
+	put32(AUX_MU_LCR_REG, 3);		//Enable 8 bit mode
+	put32(AUX_MU_MCR_REG, 0);		//Set RTS line to be always high
+	put32(AUX_MU_BAUD_REG, 270);	//Set baud rate to 115200
+
+	put32(AUX_MU_CNTL_REG, 3);	  //Finally, enable transmitter and receiver
+}
+
+
+// This function is required by printf function
+void putc(void * p, char c)
+{
+	uart_send(c);
+}
+#include "mm.h"
+#include "arm/mmu.h"
+
+static unsigned short mem_map[PAGING_PAGES] = {
+	0,
+};
+
+unsigned long allocate_kernel_page()
+{
+	unsigned long page = get_free_page();
+	if (page == 0) {
+		return 0;
+	}
+	return page + VA_START;
+}
+
+unsigned long allocate_user_page(struct task_struct * task, unsigned long va)
+{
+	unsigned long page = get_free_page();
+	if (page == 0) {
+		return 0;
+	}
+	map_page(task, va, page);
+	return page + VA_START;
+}
+
+unsigned long get_free_page()
+{
+	for (int i = 0; i < PAGING_PAGES; i++) {
+		if (mem_map[i] == 0) {
+			mem_map[i]		   = 1;
+			unsigned long page = LOW_MEMORY + i * PAGE_SIZE;
+			memzero(page + VA_START, PAGE_SIZE);
+			return page;
+		}
+	}
+	return 0;
+}
+
+void free_page(unsigned long p)
+{
+	mem_map[(p - LOW_MEMORY) / PAGE_SIZE] = 0;
+}
+
+void map_table_entry(unsigned long * pte, unsigned long va, unsigned long pa)
+{
+	unsigned long index = va >> PAGE_SHIFT;
+	index				= index & (PTRS_PER_TABLE - 1);
+	unsigned long entry = pa | MMU_PTE_FLAGS;
+	pte[index]			= entry;
+}
+
+unsigned long map_table(unsigned long * table, unsigned long shift, unsigned long va, int * new_table)
+{
+	unsigned long index = va >> shift;
+	index				= index & (PTRS_PER_TABLE - 1);
+	if (!table[index]) {
+		*new_table					   = 1;
+		unsigned long next_level_table = get_free_page();
+		unsigned long entry			   = next_level_table | MM_TYPE_PAGE_TABLE;
+		table[index]				   = entry;
+		return next_level_table;
+	} else {
+		*new_table = 0;
+	}
+	return table[index] & PAGE_MASK;
+}
+
+void map_page(struct task_struct * task, unsigned long va, unsigned long page)
+{
+	unsigned long pgd;
+	if (!task->mm.pgd) {
+		task->mm.pgd										 = get_free_page();
+		task->mm.kernel_pages[++task->mm.kernel_pages_count] = task->mm.pgd;
+	}
+	pgd = task->mm.pgd;
+	int			  new_table;
+	unsigned long pud = map_table((unsigned long *)(pgd + VA_START), PGD_SHIFT, va, &new_table);
+	if (new_table) {
+		task->mm.kernel_pages[++task->mm.kernel_pages_count] = pud;
+	}
+	unsigned long pmd = map_table((unsigned long *)(pud + VA_START), PUD_SHIFT, va, &new_table);
+	if (new_table) {
+		task->mm.kernel_pages[++task->mm.kernel_pages_count] = pmd;
+	}
+	unsigned long pte = map_table((unsigned long *)(pmd + VA_START), PMD_SHIFT, va, &new_table);
+	if (new_table) {
+		task->mm.kernel_pages[++task->mm.kernel_pages_count] = pte;
+	}
+	map_table_entry((unsigned long *)(pte + VA_START), va, page);
+	struct user_page p								 = {page, va};
+	task->mm.user_pages[task->mm.user_pages_count++] = p;
+}
+
+int copy_virt_memory(struct task_struct * dst)
+{
+	struct task_struct * src = current;
+	for (int i = 0; i < src->mm.user_pages_count; i++) {
+		unsigned long kernel_va = allocate_user_page(dst, src->mm.user_pages[i].virt_addr);
+		if (kernel_va == 0) {
+			return -1;
+		}
+		memcpy(kernel_va, src->mm.user_pages[i].virt_addr, PAGE_SIZE);
+	}
+	return 0;
+}
+
+static int ind = 1;
+
+int do_mem_abort(unsigned long addr, unsigned long esr)
+{
+	unsigned long dfs = (esr & 0b111111);
+	if ((dfs & 0b111100) == 0b100) {
+		unsigned long page = get_free_page();
+		if (page == 0) {
+			return -1;
+		}
+		map_page(current, addr & PAGE_MASK, page);
+		ind++;
+		if (ind > 2) {
+			return -1;
+		}
+		return 0;
+	}
+	return -1;
+}
+/*
+File: printf.c
+
+Copyright (C) 2004  Kustaa Nyholm
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+*/
+
+#include "printf.h"
+
+typedef void (*putcf)(void *, char);
+static putcf  stdout_putf;
+static void * stdout_putp;
+
+
+#ifdef PRINTF_LONG_SUPPORT
+
+static void uli2a(unsigned long int num, unsigned int base, int uc, char * bf)
+{
+	int			 n = 0;
+	unsigned int d = 1;
+	while (num / d >= base)
+		d *= base;
+	while (d != 0) {
+		int dgt = num / d;
+		num %= d;
+		d /= base;
+		if (n || dgt > 0 || d == 0) {
+			*bf++ = dgt + (dgt < 10 ? '0' : (uc ? 'A' : 'a') - 10);
+			++n;
+		}
+	}
+	*bf = 0;
+}
+
+static void li2a(long num, char * bf)
+{
+	if (num < 0) {
+		num	  = -num;
+		*bf++ = '-';
+	}
+	uli2a(num, 10, 0, bf);
+}
+
+#endif
+
+static void ui2a(unsigned int num, unsigned int base, int uc, char * bf)
+{
+	int			 n = 0;
+	unsigned int d = 1;
+	while (num / d >= base)
+		d *= base;
+	while (d != 0) {
+		int dgt = num / d;
+		num %= d;
+		d /= base;
+		if (n || dgt > 0 || d == 0) {
+			*bf++ = dgt + (dgt < 10 ? '0' : (uc ? 'A' : 'a') - 10);
+			++n;
+		}
+	}
+	*bf = 0;
+}
+
+static void i2a(int num, char * bf)
+{
+	if (num < 0) {
+		num	  = -num;
+		*bf++ = '-';
+	}
+	ui2a(num, 10, 0, bf);
+}
+
+static int a2d(char ch)
+{
+	if (ch >= '0' && ch <= '9')
+		return ch - '0';
+	else if (ch >= 'a' && ch <= 'f')
+		return ch - 'a' + 10;
+	else if (ch >= 'A' && ch <= 'F')
+		return ch - 'A' + 10;
+	else
+		return -1;
+}
+
+static char a2i(char ch, char ** src, int base, int * nump)
+{
+	char * p   = *src;
+	int	   num = 0;
+	int	   digit;
+	while ((digit = a2d(ch)) >= 0) {
+		if (digit > base)
+			break;
+		num = num * base + digit;
+		ch	= *p++;
+	}
+	*src  = p;
+	*nump = num;
+	return ch;
+}
+
+static void putchw(void * putp, putcf putf, int n, char z, char * bf)
+{
+	char   fc = z ? '0' : ' ';
+	char   ch;
+	char * p = bf;
+	while (*p++ && n > 0)
+		n--;
+	while (n-- > 0)
+		putf(putp, fc);
+	while ((ch = *bf++))
+		putf(putp, ch);
+}
+
+void tfp_format(void * putp, putcf putf, char * fmt, va_list va)
+{
+	char bf[12];
+
+	char ch;
+
+
+	while ((ch = *(fmt++))) {
+		if (ch != '%')
+			putf(putp, ch);
+		else {
+			char lz = 0;
+#ifdef PRINTF_LONG_SUPPORT
+			char lng = 0;
+#endif
+			int w = 0;
+			ch	  = *(fmt++);
+			if (ch == '0') {
+				ch = *(fmt++);
+				lz = 1;
+			}
+			if (ch >= '0' && ch <= '9') {
+				ch = a2i(ch, &fmt, 10, &w);
+			}
+#ifdef PRINTF_LONG_SUPPORT
+			if (ch == 'l') {
+				ch	= *(fmt++);
+				lng = 1;
+			}
+#endif
+			switch (ch) {
+				case 0:
+					goto abort;
+				case 'u': {
+#ifdef PRINTF_LONG_SUPPORT
+					if (lng)
+						uli2a(va_arg(va, unsigned long int), 10, 0, bf);
+					else
+#endif
+						ui2a(va_arg(va, unsigned int), 10, 0, bf);
+					putchw(putp, putf, w, lz, bf);
+					break;
+				}
+				case 'd': {
+#ifdef PRINTF_LONG_SUPPORT
+					if (lng)
+						li2a(va_arg(va, unsigned long int), bf);
+					else
+#endif
+						i2a(va_arg(va, int), bf);
+					putchw(putp, putf, w, lz, bf);
+					break;
+				}
+				case 'x':
+				case 'X':
+#ifdef PRINTF_LONG_SUPPORT
+					if (lng)
+						uli2a(va_arg(va, unsigned long int), 16, (ch == 'X'), bf);
+					else
+#endif
+						ui2a(va_arg(va, unsigned int), 16, (ch == 'X'), bf);
+					putchw(putp, putf, w, lz, bf);
+					break;
+				case 'c':
+					putf(putp, (char)(va_arg(va, int)));
+					break;
+				case 's':
+					putchw(putp, putf, w, 0, va_arg(va, char *));
+					break;
+				case '%':
+					putf(putp, ch);
+				default:
+					break;
+			}
+		}
+	}
+abort:;
+}
+
+
+void init_printf(void * putp, void (*putf)(void *, char))
+{
+	stdout_putf = putf;
+	stdout_putp = putp;
+}
+
+void tfp_printf(char * fmt, ...)
+{
+	va_list va;
+	va_start(va, fmt);
+	tfp_format(stdout_putp, stdout_putf, fmt, va);
+	va_end(va);
+}
+
+static void putcp(void * p, char c)
+{
+	*(*((char **)p))++ = c;
+}
+
+
+void tfp_sprintf(char * s, char * fmt, ...)
+{
+	va_list va;
+	va_start(va, fmt);
+	tfp_format(&s, putcp, fmt, va);
+	putcp(&s, 0);
+	va_end(va);
+}
+#include "sched.h"
+#include "irq.h"
+#include "printf.h"
+#include "utils.h"
+#include "mm.h"
+
+static struct task_struct init_task		 = INIT_TASK;
+struct task_struct *	  current		 = &(init_task);
+struct task_struct *	  task[NR_TASKS] = {
+	 &(init_task),
+};
+int nr_tasks = 1;
+
+void preempt_disable(void)
+{
+	current->preempt_count++;
+}
+
+void preempt_enable(void)
+{
+	current->preempt_count--;
+}
+
+
+void _schedule(void)
+{
+	preempt_disable();
+	int					 next, c;
+	struct task_struct * p;
+	while (1) {
+		c	 = -1;
+		next = 0;
+		for (int i = 0; i < NR_TASKS; i++) {
+			p = task[i];
+			if (p && p->state == TASK_RUNNING && p->counter > c) {
+				c	 = p->counter;
+				next = i;
+			}
+		}
+		if (c) {
+			break;
+		}
+		for (int i = 0; i < NR_TASKS; i++) {
+			p = task[i];
+			if (p) {
+				p->counter = (p->counter >> 1) + p->priority;
+			}
+		}
+	}
+	switch_to(task[next]);
+	preempt_enable();
+}
+
+void schedule(void)
+{
+	current->counter = 0;
+	_schedule();
+}
+
+
+void switch_to(struct task_struct * next)
+{
+	if (current == next)
+		return;
+	struct task_struct * prev = current;
+	current					  = next;
+	set_pgd(next->mm.pgd);
+	cpu_switch_to(prev, next);
+}
+
+void schedule_tail(void)
+{
+	preempt_enable();
+}
+
+
+void timer_tick()
+{
+	--current->counter;
+	if (current->counter > 0 || current->preempt_count > 0) {
+		return;
+	}
+	current->counter = 0;
+	enable_irq();
+	_schedule();
+	disable_irq();
+}
+
+void exit_process()
+{
+	preempt_disable();
+	for (int i = 0; i < NR_TASKS; i++) {
+		if (task[i] == current) {
+			task[i]->state = TASK_ZOMBIE;
+			break;
+		}
+	}
+	preempt_enable();
+	schedule();
+}
+#include "fork.h"
+#include "printf.h"
+#include "utils.h"
+#include "sched.h"
+#include "mm.h"
+
+
+void sys_write(char * buf)
+{
+	printf(buf);
+}
+
+int sys_fork()
+{
+	return copy_process(0, 0, 0);
+}
+
+void sys_exit()
+{
+	exit_process();
+}
+
+void * const sys_call_table[] = {sys_write, sys_fork, sys_exit};
+#include "utils.h"
+#include "printf.h"
+#include "sched.h"
+#include "peripherals/timer.h"
+
+const unsigned int interval = 200000;
+unsigned int	   curVal	= 0;
+
+void timer_init(void)
+{
+	curVal = get32(TIMER_CLO);
+	curVal += interval;
+	put32(TIMER_C1, curVal);
+}
+
+void handle_timer_irq(void)
+{
+	curVal += interval;
+	put32(TIMER_C1, curVal);
+	put32(TIMER_CS, TIMER_CS_M1);
+	timer_tick();
+}
+#include "user_sys.h"
+#include "user.h"
+#include "printf.h"
+
+void loop(char * str)
+{
+	char buf[2] = {""};
+	while (1) {
+		for (int i = 0; i < 5; i++) {
+			buf[0] = str[i];
+			call_sys_write(buf);
+			user_delay(1000000);
+		}
+	}
+}
+
+void user_process()
+{
+	call_sys_write("User process\n\r");
+	int pid = call_sys_fork();
+	if (pid < 0) {
+		call_sys_write("Error during fork\n\r");
+		call_sys_exit();
+		return;
+	}
+	if (pid == 0) {
+		loop("abcde");
+	} else {
+		loop("12345");
+	}
+}
