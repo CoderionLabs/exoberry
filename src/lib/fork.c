@@ -28,8 +28,8 @@ int pgfault(unsigned long addr, unsigned long esr)
 int copy_process(unsigned long clone_flags, unsigned long fn, unsigned long arg)
 {
 	set_pgfault_handler(&pgfault);
-    
-    preempt_disable();
+
+	preempt_disable();
 	struct task_struct * p;
 
 	unsigned long page		   = allocate_user_page(current, 0);

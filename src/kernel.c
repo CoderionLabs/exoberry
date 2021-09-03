@@ -9,6 +9,7 @@
 #include "lib/fork.h"
 #include "sched.h"
 #include "mini_uart.h"
+#include "liballoc.h"
 #include "sys.h"
 
 
@@ -34,9 +35,22 @@ void kernel_main()
 	enable_interrupt_controller();
 	enable_irq();
 
+    printf("Welcome to Exoberry OS!");
+
+    printf("Testing Memory Allocator");
+
+    char* x = (char*) malloc(sizeof(char) * 9);
+
+    for(int i = 0; i < 9; i++){
+        x[i] = "A";
+    }
+
+    printf("%s", x);
+
+
 	int res = copy_process(PF_KTHREAD, (unsigned long)&kernel_process, 0);
-	
-    if (res < 0) {
+
+	if (res < 0) {
 		printf("error while starting kernel process");
 		return;
 	}

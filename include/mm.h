@@ -35,12 +35,14 @@
 
 unsigned long get_free_page();
 void		  free_page(unsigned long p);
+void          free_kernel_pages(unsigned long startva, int num_pages);
 void		  map_page(struct task_struct * task, unsigned long va, unsigned long page);
 void		  memzero(unsigned long src, unsigned long n);
 void		  memcpy(unsigned long dst, unsigned long src, unsigned long n);
 
 int			  copy_virt_memory(struct task_struct * dst);
 unsigned long allocate_kernel_page();
+unsigned long allocate_kernel_pages(int num_pages);
 unsigned long allocate_user_page(struct task_struct * task, unsigned long va);
 
 extern unsigned long pg_dir;

@@ -3,8 +3,7 @@
 
 extern void umain();
 
-void
-libmain(){
-    umain();
+void libmain()
+{
+	umain();
 }
-

@@ -14,6 +14,28 @@ unsigned long allocate_kernel_page()
 	return page + VA_START;
 }
 
+// Trash function to allocate multiple kernel pages
+// TODO: check if this actually works
+unsigned long allocate_kernel_pages(int num_pages){
+    int rez = 0;
+    for(int i = 0; i < num_pages; i++){
+        if(i == 0){
+            rez = allocate_kernel_page();
+        }else{
+            allocate_kernel_page();
+        }
+    }
+    return rez;
+}
+
+void free_kernel_pages(unsigned long startva, int num_pages){
+    
+    for(int i = 0; i < num_pages; i++){
+        free_page(startva + (PAGE_SIZE * i));
+    }
+}
+
+
 unsigned long allocate_user_page(struct task_struct * task, unsigned long va)
 {
 	unsigned long page = get_free_page();
@@ -104,4 +126,3 @@ int copy_virt_memory(struct task_struct * dst)
 	}
 	return 0;
 }
-
