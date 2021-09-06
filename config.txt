@@ -1,5 +1,4 @@
-arm_64bit=1
+kernel_old=1
 uart_2ndstage=1
 dtoverlay=pi3-disable-bt
 disable_commandline_tags=1
-armstub=armstub-new.bin

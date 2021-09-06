@@ -12,7 +12,7 @@ To install Exoberry you will need
 
 - Raspbery Pi 3 Model B
 - USB to TTL serial cable
-- SD card with installed Rasspbian OS
+- SD card with installed Raspbian OS (2017 Version)
 - The Exoberry image either built from source or downloaded from releases.
 
 1. Copy `kernel8.img` file to the `boot` partition of your Raspberry Pi flash card and delete the other `kernel*.img` files on your SD card. 

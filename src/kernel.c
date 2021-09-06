@@ -12,6 +12,14 @@
 #include "liballoc.h"
 #include "sys.h"
 
+void cool_putc(void *p, char c) {
+    if (c == '\n') {
+        uart_send('\r');
+    }
+
+    uart_send(c);
+}
+
 
 void kernel_process()
 {
@@ -29,13 +37,17 @@ void kernel_process()
 void kernel_main()
 {
 	uart_init();
-	init_printf(NULL, putc);
+	init_printf(NULL, cool_putc);
+
+
+    while(1){
+        printf("Welcome to Exoberry OS FRIEDY!\n");
+    }
+    printf("UART DONE\n");
 	irq_vector_init();
 	timer_init();
 	enable_interrupt_controller();
 	enable_irq();
-
-    printf("Welcome to Exoberry OS!");
 
     printf("Testing Memory Allocator");
 

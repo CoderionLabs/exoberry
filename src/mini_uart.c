@@ -52,6 +52,10 @@ void uart_init(void)
 	put32(AUX_MU_BAUD_REG, 270);	//Set baud rate to 115200
 
 	put32(AUX_MU_CNTL_REG, 3);	  //Finally, enable transmitter and receiver
+
+    uart_send('\r');
+    uart_send('\n');
+    uart_send('\n');
 }
 
 
