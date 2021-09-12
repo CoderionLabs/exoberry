@@ -1,4 +1,6 @@
 .bob.cache
+build/
+*.img
 out/
 .out.*
 disk.img
