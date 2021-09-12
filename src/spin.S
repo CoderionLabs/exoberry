@@ -14,15 +14,15 @@
 
 .globl spin_lock
 spin_lock:
-	mov	w2, #1
+	mov	x1, #1
 	sevl
-l1:	wfe
-l2:	ldaxr	w1, [x0]
-	cbnz	w1, l1
-	stxr	w1, w2, [x0]
-	cbnz	w1, l2
+1:
+	wfe
+	ldaxr	x2, [x0]
+	cbnz	x2, 1b
+	stxr	w2, x1, [x0]
+	cbnz	w2, 1b
 	ret
-
 
 /*
  * Release lock previously acquired by spin_lock.

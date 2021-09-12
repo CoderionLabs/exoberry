@@ -21,6 +21,9 @@
 #define PAGING_MEMORY (HIGH_MEMORY - LOW_MEMORY)
 #define PAGING_PAGES (PAGING_MEMORY / PAGE_SIZE)
 
+#define KHEAP_START VA_START + LOW_MEMORY
+#define KHEAP_SIZE 256 * PAGE_SIZE
+
 #define PTRS_PER_TABLE (1 << TABLE_SHIFT)
 
 #define PGD_SHIFT PAGE_SHIFT + 3 * TABLE_SHIFT
@@ -35,14 +38,15 @@
 
 unsigned long get_free_page();
 void		  free_page(unsigned long p);
-void          free_kernel_pages(unsigned long startva, int num_pages);
+void		  free_region(unsigned long startva, int num_pages);
 void		  map_page(struct task_struct * task, unsigned long va, unsigned long page);
 void		  memzero(unsigned long src, unsigned long n);
 void		  memcpy(unsigned long dst, unsigned long src, unsigned long n);
 
 int			  copy_virt_memory(struct task_struct * dst);
+int			  kheap_init();
 unsigned long allocate_kernel_page();
-unsigned long allocate_kernel_pages(int num_pages);
+unsigned long allocate_region(int num_pages);
 unsigned long allocate_user_page(struct task_struct * task, unsigned long va);
 
 extern unsigned long pg_dir;

@@ -1,5 +1,6 @@
 #include "mm.h"
 #include "arm/mmu.h"
+#include "printf.h"
 
 static unsigned short mem_map[PAGING_PAGES] = {
 	0,
@@ -14,25 +15,36 @@ unsigned long allocate_kernel_page()
 	return page + VA_START;
 }
 
-// Trash function to allocate multiple kernel pages
-// TODO: check if this actually works
-unsigned long allocate_kernel_pages(int num_pages){
-    int rez = 0;
-    for(int i = 0; i < num_pages; i++){
-        if(i == 0){
-            rez = allocate_kernel_page();
-        }else{
-            allocate_kernel_page();
-        }
-    }
-    return rez;
+int kheap_init()
+{
+	int x = 0;
+	for (int i = 0; i < 256; i++) {
+		x = allocate_kernel_page();
+	}
+
+	return (x == 0) ? -1 : 0;
 }
 
-void free_kernel_pages(unsigned long startva, int num_pages){
-    
-    for(int i = 0; i < num_pages; i++){
-        free_page(startva + (PAGE_SIZE * i));
-    }
+unsigned long allocate_region(int num_pages)
+{
+	unsigned long startva = allocate_kernel_page();
+	//unsigned long endva = startva + (PAGE_SIZE * (num_pages -1));
+
+	while (num_pages--) {
+		allocate_kernel_page();
+	}
+
+	return startva;
+}
+
+void free_region(unsigned long startva, int num_pages)
+{
+	unsigned long endva = startva + (PAGE_SIZE * (num_pages - 1));
+
+	while (startva <= endva) {
+		free_page(startva);
+		startva = startva + PAGE_SIZE;
+	}
 }
 
 
@@ -125,4 +137,25 @@ int copy_virt_memory(struct task_struct * dst)
 		memcpy(kernel_va, src->mm.user_pages[i].virt_addr, PAGE_SIZE);
 	}
 	return 0;
+}
+
+static int ind = 1;
+
+int do_mem_abort(unsigned long addr, unsigned long esr)
+{
+    printf("MEMORY ABORT\n");
+	unsigned long dfs = (esr & 0b111111);
+	if ((dfs & 0b111100) == 0b100) {
+		unsigned long page = get_free_page();
+		if (page == 0) {
+			return -1;
+		}
+		map_page(current, addr & PAGE_MASK, page);
+		ind++;
+		if (ind > 2) {
+			return -1;
+		}
+		return 0;
+	}
+	return -1;
 }

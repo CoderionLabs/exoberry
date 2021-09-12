@@ -49,7 +49,7 @@
 
 	.macro	kernel_exit, el
 	ldp	x22, x23, [sp, #16 * 16]
-	ldp	x30, x21, [sp, #16 * 15] 
+	ldp	x30, x21, [sp,#16 * 15] 
 
 	.if	\el == 0
 	msr	sp_el0, x21
@@ -191,7 +191,7 @@ el0_da:
 	bl	enable_irq
 	mrs	x0, far_el1
 	mrs	x1, esr_el1			
-	bl	pgfault_handler
+	bl	do_mem_abort
 	cmp x0, 0
 	b.eq 1f
 	handle_invalid_entry 0, DATA_ABORT_ERROR
