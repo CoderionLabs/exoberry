@@ -3,4 +3,5 @@ build/
 *.img
 out/
 .out.*
+*.bin
 disk.img
