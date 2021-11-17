@@ -2,9 +2,6 @@
 
 ![Exoberry](https://i.ibb.co/vwP0vY0/Exoberry.png)
 
-![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/adkVsMFW)
-
-
 # What is Exoberry?
 Exoberry is an exokernel written for the Raspberry Pi 3. 
 # How to Install
