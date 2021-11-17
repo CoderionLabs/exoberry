@@ -28,11 +28,6 @@ To install Exoberry you will need
 
 4. Power on your Raspberry Pi
 
-# Contributing
-We are always looking for more people to help with coding, spreading the word, or simply just hanging out on [the chat](https://discord.gg/adkVsMFW).
-
-This is just a fun project. If you have any cool idea, just submit an issue. 
-
 # Building from Source
 ```bash
 git clone https://github.com/MutexUnlocked/exoberry.git
